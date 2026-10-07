@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>R4 Laboratories — Pitch Deck (NVIDIA Inception)</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07080c;
+      --card-bg: rgba(14, 18, 28, 0.7);
+      --border: rgba(255, 255, 255, 0.1);
+      --border-accent: rgba(99, 102, 241, 0.35);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --primary: #6366f1;
+      --accent: #38bdf8;
+      --purple: #a855f7;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      user-select: none;
+    }
+
+    /* Presentation Header & Controls */
+    .deck-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(7, 8, 12, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-ctrl {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-ctrl:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .slide-counter {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 90px;
+      text-align: center;
+    }
+
+    /* Progress bar */
+    .progress-bar-wrap {
+      position: fixed;
+      top: 59px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.05);
+      z-index: 101;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      width: 8.33%;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Deck Slides Container */
+    .deck-container {
+      width: 100vw;
+      height: calc(100vh - 60px);
+      margin-top: 60px;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .slide-content {
+      max-width: 1100px;
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 56px 64px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--purple));
+    }
+
+    .slide-tag {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .slide-title {
+      font-size: 2.6rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .slide-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 36px;
+      max-width: 850px;
+    }
+
+    /* Grid & Cards inside slides */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: rgba(10, 13, 22, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    .card h4 {
+      font-size: 1.1rem;
+      color: #fff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .stat-huge {
+      font-family: var(--font-mono);
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    /* Pipeline Visual */
+    .pipeline-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .pipeline-step {
+      background: rgba(15, 20, 32, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 16px;
+      position: relative;
+    }
+
+    .step-badge {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .pipeline-step h5 {
+      font-size: 0.95rem;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .pipeline-step p {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.45;
+    }
+
+    /* Speaker Notes Bar */
+    .speaker-notes-toggle {
+      position: fixed;
+      bottom: 20px;
+      left: 24px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      background: rgba(10, 12, 18, 0.8);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      z-index: 100;
+    }
+
+    .speaker-notes-box {
+      position: fixed;
+      bottom: 60px;
+      left: 24px;
+      right: 24px;
+      max-width: 800px;
+      background: rgba(10, 14, 24, 0.95);
+      border: 1px solid var(--border-accent);
+      border-radius: 12px;
+      padding: 16px 20px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      display: none;
+      z-index: 102;
+    }
+
+    .speaker-notes-box.show {
+      display: block;
+    }
+
+    .speaker-notes-box h6 {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .speaker-notes-box p {
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        overflow: visible;
+        height: auto;
+      }
+      .deck-header, .progress-bar-wrap, .speaker-notes-toggle, .speaker-notes-box {
+        display: none !important;
+      }
+      .deck-container {
+        margin: 0;
+        height: auto;
+      }
+      .slide {
+        position: relative !important;
+        display: flex !important;
+        opacity: 1 !important;
+        page-break-after: always;
+        height: 100vh;
+        padding: 20px;
+      }
+      .slide-content {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        background: #000 !important;
+        color: #fff !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="deck-header">
+    <a href="https://r4labs.org" class="brand-group">
+      <svg width="24" height="24" viewBox="0 0 64 64" fill="none">
+        <path d="M18 16H34C40.6274 16 46 21.3726 46 28C46 34.6274 40.6274 40 34 40H26V48H18V16Z" stroke="#6366f1" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M34 40L46 48" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="34" cy="28" r="4" fill="#a855f7"/>
+      </svg>
+      <strong style="font-size: 0.95rem; letter-spacing: -0.01em;">R4 LABORATORIES</strong>
+      <span class="brand-badge">NVIDIA INCEPTION PITCH</span>
+    </a>
+
+    <div class="controls">
+      <button class="btn-ctrl" onclick="prevSlide()">&#8592; Prev</button>
+      <div class="slide-counter" id="counter">1 / 12</div>
+      <button class="btn-ctrl" onclick="nextSlide()">Next &#8594;</button>
+      <button class="btn-ctrl" onclick="toggleFullscreen()">Fullscreen (F)</button>
+      <button class="btn-ctrl" onclick="window.print()">Print / PDF</button>
+    </div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Slides Container -->
+  <main class="deck-container">
+
+    <!-- Slide 1: Title -->
+    <section class="slide active" data-notes="Welcome NVIDIA Inception evaluators. R4 Laboratories is an independent, self-funded deep-tech lab founded by Casey Allard. We have spent over two years engineering the post-transformer foundation for frontier intelligence—replacing quadratic continuous tensor multiplication with exact addressed memory and discrete topological state transitions.">
+      <div class="slide-content">
+        <span class="slide-tag">DEEP-TECH AI · ALGEBRAIC TOPOLOGY · NEXT-GEN COMPUTE</span>
+        <h1 class="slide-title">Beyond the Transformer:<br/>The Native Geometric Foundation</h1>
+        <p class="slide-subtitle">
+          Autoregressive geometric state models with exact addressed memory and multiplier-free serving kernels—engineered for frontier reasoning at fractional energy and thermal limits.
+        </p>
+        <div class="grid-3">
+          <div class="card">
+            <h4>Founder & Lead</h4>
+            <p><strong>Casey Allard</strong><br/>casey.allard@r4labs.org</p>
+          </div>
+          <div class="card">
+            <h4>Organization</h4>
+            <p><strong>R4 Laboratories</strong><br/>r4labs.org · Providence, RI</p>
+          </div>
+          <div class="card">
+            <h4>Open Source Core</h4>
+            <p><strong>Rust Engine & Spec</strong><br/>github.com/R4-Laboratories</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: The Problem -->
+    <section class="slide" data-notes="Transformers have achieved incredible milestones, but their architectural tax is becoming unsustainable. Context length is strangled by quadratic attention complexity and memory-bandwidth-choking KV-caches. Power consumption is hitting a hard physical wall. Adding more matrix multipliers yields diminishing returns per megawatt.">
+      <div class="slide-content">
+        <span class="slide-tag">THE MACRO PROBLEM</span>
+        <h2 class="slide-title">The Scaling Ceiling of Dense Transformers</h2>
+        <p class="slide-subtitle">
+          Brute-force matrix scaling is colliding with the physical limits of memory bandwidth and power consumption.
+        </p>
+        <div class="grid-3">
+          <div class="card">
+            <h4>1. Quadratic Memory Wall</h4>
+            <p>Attention scales as O(N²). Sprawling KV-caches starve memory bandwidth, making large-context inference economically prohibitive.</p>
+          </div>
+          <div class="card">
+            <h4>2. Extreme Thermal & Energy Tax</h4>
+            <p>Datacenters are power-constrained, while edge devices overheat. Continuous floating-point matrix multiplication wastes massive energy.</p>
+          </div>
+          <div class="card">
+            <h4>3. Probabilistic Hallucination</h4>
+            <p>Continuous vector approximations blur historical facts over long reasoning chains, lacking immutable exact coordinate addressing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: The Thesis -->
+    <section class="slide" data-notes="Physical systems and information theory conserve energy through symmetry, topology, and discrete invariants. Instead of forcing millions of continuous parameters to approximate relationships through floating-point brute force, R4 maps language and reasoning onto exact geometric coordinate systems.">
+      <div class="slide-content">
+        <span class="slide-tag">THE R4 THESIS</span>
+        <h2 class="slide-title">Computing via Topology, Symmetry, and Exact Invariants</h2>
+        <p class="slide-subtitle">
+          Intelligence does not require brute-force matrix multiplication. Nature solves high-dimensional problems through structured symmetries and conservation laws.
+        </p>
+        <div class="grid-2">
+          <div class="card">
+            <h4 style="color: #ef4444;">Conventional Transformers</h4>
+            <p style="margin-bottom: 12px;">• Dense continuous parameter soup with unconstrained degrees of freedom.</p>
+            <p style="margin-bottom: 12px;">• Continuous floating-point matrix multiplication at every inference step.</p>
+            <p>• Memory bloat proportional to context length.</p>
+          </div>
+          <div class="card" style="border-color: var(--border-accent);">
+            <h4 style="color: var(--accent);">R4 Geometric Models</h4>
+            <p style="margin-bottom: 12px;">• Structured state evolution over R4/S3 topological manifolds.</p>
+            <p style="margin-bottom: 12px;">• Multiplier-free serving: bounded integer additions, bitwise shifts, and table lookups.</p>
+            <p>• Exact addressed memory (UOR) with zero KV-cache explosion.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Architectural Deep-Dive -->
+    <section class="slide" data-notes="Here is the execution pipeline. Offline Rust training utilizes floating point and matrix arithmetic to learn geometric operators. However, final serving strictly adheres to our multiplier-free contract: tokens enter prime coordinate spaces, transition through 4D hyperspheric manifolds, retrieve addressed memory, and serve via integer lookup.">
+      <div class="slide-content">
+        <span class="slide-tag">NATIVE GEOMETRIC ARCHITECTURE</span>
+        <h2 class="slide-title">The Four Fundamental Primitives</h2>
+        <p class="slide-subtitle">
+          A ground-up departure from dense transformer backbones — from raw tokens to served output.
+        </p>
+        <div class="pipeline-row">
+          <div class="pipeline-step">
+            <div class="step-badge">PRIMITIVE 01</div>
+            <h5>Prime Coordinate Encoding</h5>
+            <p>Tokens mapped to exact prime addresses and fixed zeta-zero phases without semantic dilution.</p>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-badge">PRIMITIVE 02</div>
+            <h5>R4/S3 Manifold Updates</h5>
+            <p>State transitions over 4D hyperspheres and paired golden icosians (H4 &oplus; &phi;H4) preserving ring invariants.</p>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-badge">PRIMITIVE 03</div>
+            <h5>Exact Addressed Memory</h5>
+            <p>Universal Object Reference (UOR) addressing replaces fuzzy attention decay with deterministic coordinate lookup.</p>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-badge">PRIMITIVE 04</div>
+            <h5>Multiplier-Free Serving</h5>
+            <p>Inference executes strictly via bounded integer addition, bitwise shifts, and compact table lookups.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Performance Advantages -->
+    <section class="slide" data-notes="Because our serving kernel uses zero runtime floating-point multipliers, we achieve more than a 10x reduction in energy consumption. The model runs locally on low-power consumer silicon with near-zero thermal saturation, eliminating the massive cloud cooling overhead.">
+      <div class="slide-content">
+        <span class="slide-tag">MEASURED ADVANTAGES</span>
+        <h2 class="slide-title">Radical Efficiency by Design</h2>
+        <p class="slide-subtitle">
+          Eliminating continuous matrix multiplication unlocks unprecedented latency and power characteristics.
+        </p>
+        <div class="grid-4">
+          <div class="card">
+            <div class="stat-huge">0</div>
+            <h4>Served Multipliers</h4>
+            <p>No floating-point multiplier instructions in served execution kernels.</p>
+          </div>
+          <div class="card">
+            <div class="stat-huge">10×+</div>
+            <h4>Energy Reduction</h4>
+            <p>Sub-watt-hour token generation on consumer and edge hardware.</p>
+          </div>
+          <div class="card">
+            <div class="stat-huge">O(1)</div>
+            <h4>Memory Footprint</h4>
+            <p>Constant-memory geometric state eliminates runaway KV-cache bloat.</p>
+          </div>
+          <div class="card">
+            <div class="stat-huge">100%</div>
+            <h4>Verifiability</h4>
+            <p>Bitwise deterministic artifact generation and cryptographic receipts.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Synergy with NVIDIA -->
+    <section class="slide" data-notes="Why NVIDIA? NVIDIA hardware is the undisputed king of memory bandwidth and extreme low-bit integer operations. R4's bounded integer and table-based serving maps directly to INT4 and INT8 Tensor Cores. With NVIDIA's partnership, we can map discrete topological ring arithmetic directly to custom CUDA and TensorRT kernels.">
+      <div class="slide-content">
+        <span class="slide-tag">HARDWARE SYNERGY</span>
+        <h2 class="slide-title">Why NVIDIA? Accelerating Geometric Primitives</h2>
+        <p class="slide-subtitle">
+          Unlocking next-generation throughput on NVIDIA Ada Lovelace, Hopper, and Blackwell architectures.
+        </p>
+        <div class="grid-3">
+          <div class="card">
+            <h4>INT4 / INT8 Tensor Cores</h4>
+            <p>R4 serving kernels use bounded ≤4-bit integer linear maps and table reads—ideal for ultra-high throughput execution on Tensor Cores.</p>
+          </div>
+          <div class="card">
+            <h4>Memory Bandwidth Liberation</h4>
+            <p>Eliminating sprawling KV-caches frees high-bandwidth memory (HBM), allowing tens of thousands of concurrent streams per GPU.</p>
+          </div>
+          <div class="card">
+            <h4>Custom CUDA Ring Kernels</h4>
+            <p>Opportunity to co-develop CUDA/TensorRT acceleration for golden ratio Z[&phi;] ring arithmetic and prime coordinate routing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Proof of Work -->
+    <section class="slide" data-notes="This is not just theory. For over two years, R4 Laboratories has been completely self-funded, writing pure, high-performance Rust. Our repositories under R4-Laboratories include the core uor-r4 engine, prime-router, canonical content addressing, and in-browser WebAssembly runtimes.">
+      <div class="slide-content">
+        <span class="slide-tag">TRACTION & OPEN SOURCE</span>
+        <h2 class="slide-title">2+ Years of Self-Funded Engineering</h2>
+        <p class="slide-subtitle">
+          A production-grade Rust codebase and active research ecosystem under @R4-Laboratories.
+        </p>
+        <div class="grid-3">
+          <div class="card">
+            <h4>uor-r4</h4>
+            <p>Primary autoregressive geometric state model, Rust autodiff training tools, and multiplier-free serving kernels.</p>
+          </div>
+          <div class="card">
+            <h4>prime-router</h4>
+            <p>Angular-manifold and prime-coordinate routing framework for high-dimensional semantic spaces.</p>
+          </div>
+          <div class="card">
+            <h4>uor-addr-1</h4>
+            <p>Chain-agnostic canonical content addressing standard (RFC8785) for agent-produced artifacts.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8: Autonomous Labs -->
+    <section class="slide" data-notes="We also pioneered an autonomous multi-agent research methodology. Our lab infrastructure coordinates autonomous agent benches with cryptographic receipts, ensuring that every benchmark, model weight, and scientific claim is verifiable and 100% reproducible.">
+      <div class="slide-content">
+        <span class="slide-tag">METHODOLOGY</span>
+        <h2 class="slide-title">Autonomous Multi-Agent Research Ecosystem</h2>
+        <p class="slide-subtitle">
+          Continuous scientific verification through decentralized multi-agent consensus protocols.
+        </p>
+        <div class="grid-3">
+          <div class="card">
+            <h4>Cryptographic Evidence</h4>
+            <p>Every hypothesis, training checkpoint, and evaluation receipt is recorded in immutable ledgers.</p>
+          </div>
+          <div class="card">
+            <h4>Zero Reproducibility Crises</h4>
+            <p>Pinning exact compiler states, seeds, and training ladders guarantees bitwise identical results.</p>
+          </div>
+          <div class="card">
+            <h4>Autonomous Continuous Learning</h4>
+            <p>Multi-agent benches coordinate across isolated worktrees, continuously exploring geometric topologies.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 9: Commercialization -->
+    <section class="slide" data-notes="R4 addresses high-value commercial sectors where transformers fail due to power, heat, or hallucination. These include edge robotics, aerospace, defense, and mission-critical enterprise sectors requiring exact addressed memory with legal and regulatory compliance.">
+      <div class="slide-content">
+        <span class="slide-tag">COMMERCIAL OPPORTUNITY</span>
+        <h2 class="slide-title">Target Markets & Commercialization</h2>
+        <p class="slide-subtitle">
+          Targeting high-margin domains where transformers are physically or economically non-viable.
+        </p>
+        <div class="grid-3">
+          <div class="card">
+            <h4>1. Edge AI, Defense & Aerospace</h4>
+            <p>Thermal-constrained and battery-powered platforms requiring offline frontier reasoning without overheating or draining batteries.</p>
+          </div>
+          <div class="card">
+            <h4>2. Enterprise Exact Memory</h4>
+            <p>Financial, healthcare, and legal compliance where non-hallucinatory, auditable addressed memory is mandatory.</p>
+          </div>
+          <div class="card">
+            <h4>3. Foundation Model IP Licensing</h4>
+            <p>Licensing multiplier-free geometric model weights and lightweight serving runtimes to hyperscalers and chipmakers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 10: Roadmap -->
+    <section class="slide" data-notes="Here is our strategic timeline. Currently, we are finalizing the Rust joint-learning ladder and discretization bridge. In early 2027, with NVIDIA Inception's support, we will implement custom Tensor Core CUDA kernels and scale to our 1B-equivalent geometric model benchmark.">
+      <div class="slide-content">
+        <span class="slide-tag">ROADMAP</span>
+        <h2 class="slide-title">Strategic Milestones (2026 – 2027)</h2>
+        <p class="slide-subtitle">
+          From mathematical proof-of-concept to accelerated enterprise geometric foundation models.
+        </p>
+        <div class="grid-4">
+          <div class="card">
+            <div class="step-badge">Q4 2026 (CURRENT)</div>
+            <h4>Training Ladder</h4>
+            <p>Complete Rust autodiff ladder, discretization bridge, and open-source benchmark suite.</p>
+          </div>
+          <div class="card">
+            <div class="step-badge">Q1 2027</div>
+            <h4>CUDA Acceleration</h4>
+            <p>Custom NVIDIA Tensor Core INT4 kernels and 1B-equivalent geometric model release.</p>
+          </div>
+          <div class="card">
+            <div class="step-badge">Q2 2027</div>
+            <h4>Edge Runtime</h4>
+            <p>Ultra-low power edge deployment on embedded silicon and enterprise pilot trials.</p>
+          </div>
+          <div class="card">
+            <div class="step-badge">Q3 2027</div>
+            <h4>Frontier Scaling</h4>
+            <p>Multi-node autonomous scaling and frontier capability evaluation on reasoning benchmarks.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 11: The Ask -->
+    <section class="slide" data-notes="What is our ask from NVIDIA? First, access to DGX Cloud or partner GPU credits to accelerate our training runs. Second, architectural collaboration with NVIDIA engineers to optimize custom integer and table-lookup CUDA kernels. Third, visibility through the Inception showcase.">
+      <div class="slide-content">
+        <span class="slide-tag">PARTNERSHIP</span>
+        <h2 class="slide-title">The Ask: Accelerating R4 with NVIDIA Inception</h2>
+        <p class="slide-subtitle">
+          Partnering with NVIDIA to bring native geometric computing to accelerated enterprise hardware.
+        </p>
+        <div class="grid-3">
+          <div class="card">
+            <h4>1. GPU Cluster Compute</h4>
+            <p>Access to NVIDIA DGX Cloud or partner GPU credits (Lambda, CoreWeave, RunPod) to scale our offline training ladders and parameter exploration.</p>
+          </div>
+          <div class="card">
+            <h4>2. Architectural Collaboration</h4>
+            <p>Engagement with NVIDIA DevRel and engineers to optimize custom integer and table-lookup CUDA kernels for TensorRT and Blackwell.</p>
+          </div>
+          <div class="card">
+            <h4>3. Inception Network</h4>
+            <p>Inception showcase visibility, co-authored technical publications, and venture connections through Inception Capital Connect.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 12: Closing -->
+    <section class="slide" data-notes="Thank you. The future of intelligence will not be decided by who burns the most power, but by who discovers the most elegant geometry. We invite NVIDIA to join us in pioneering this foundation.">
+      <div class="slide-content" style="text-align: center;">
+        <span class="slide-tag">R4 LABORATORIES</span>
+        <h2 class="slide-title" style="font-size: 3rem; margin-bottom: 24px;">The Geometric Future of AI</h2>
+        <p class="slide-subtitle" style="margin: 0 auto 40px; max-width: 750px;">
+          "The future of intelligence will not be decided by who burns the most power, but by who discovers the most elegant geometry."
+        </p>
+        <div style="display: inline-flex; gap: 32px; text-align: left; background: rgba(10, 13, 22, 0.8); border: 1px solid var(--border-accent); padding: 24px 36px; border-radius: 16px;">
+          <div>
+            <div style="font-size: 0.76rem; color: var(--accent); font-family: var(--font-mono); font-weight: 700;">PRINCIPAL RESEARCHER</div>
+            <div style="font-size: 1.1rem; font-weight: 700; color: #fff;">Casey Allard</div>
+            <div style="font-size: 0.88rem; color: var(--text-muted);">casey.allard@r4labs.org</div>
+          </div>
+          <div style="border-left: 1px solid var(--border); padding-left: 32px;">
+            <div style="font-size: 0.76rem; color: var(--accent); font-family: var(--font-mono); font-weight: 700;">LAB HEADQUARTERS</div>
+            <div style="font-size: 1.1rem; font-weight: 700; color: #fff;">Providence, RI</div>
+            <div style="font-size: 0.88rem; color: var(--text-muted);">https://r4labs.org</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Speaker Notes Box -->
+  <button class="speaker-notes-toggle" onclick="toggleNotes()">Toggle Notes (N)</button>
+  <div class="speaker-notes-box" id="notesBox">
+    <h6>Speaker Notes</h6>
+    <p id="notesContent"></p>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const counter = document.getElementById('counter');
+    const progressBar = document.getElementById('progressBar');
+    const notesBox = document.getElementById('notesBox');
+    const notesContent = document.getElementById('notesContent');
+
+    function updateSlide() {
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === currentSlide);
+      });
+      counter.innerText = `${currentSlide + 1} / ${slides.length}`;
+      progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+      
+      const note = slides[currentSlide].getAttribute('data-notes') || '';
+      notesContent.innerText = note;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function toggleNotes() {
+      notesBox.classList.toggle('show');
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      } else if (e.key.toLowerCase() === 'f') {
+        toggleFullscreen();
+      } else if (e.key.toLowerCase() === 'n') {
+        toggleNotes();
+      }
+    });
+
+    updateSlide();
+  </script>
+</body>
+</html>
