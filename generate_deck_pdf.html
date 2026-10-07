@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>R4 Laboratories Pitch Deck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: 16in 9in;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      background-color: #07080c;
+      color: #f8fafc;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .pdf-slide {
+      width: 16in;
+      height: 9in;
+      max-height: 9in;
+      page-break-after: always;
+      page-break-inside: avoid;
+      break-after: page;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 0.75in 1in 0.55in 1in;
+      background: radial-gradient(circle at 50% -10%, #151828 0%, #07080c 70%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Grid background effect */
+    .pdf-slide::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    /* Top glowing accent line */
+    .top-accent-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #6366f1, #38bdf8, #a855f7);
+    }
+
+    /* Slide Header */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+
+    .tag-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 4px 12px;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .header-subtag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    /* Slide Body */
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .slide-title-box {
+      margin-bottom: 32px;
+    }
+
+    .slide-category {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #818cf8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .slide-title {
+      font-size: 2.7rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .slide-subtitle {
+      font-size: 1.25rem;
+      color: #94a3b8;
+      line-height: 1.5;
+      max-width: 1050px;
+    }
+
+    /* Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    /* Cards */
+    .card {
+      background: rgba(14, 18, 30, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 26px 24px;
+      position: relative;
+    }
+
+    .card.highlight {
+      border-color: rgba(99, 102, 241, 0.4);
+      background: rgba(20, 26, 44, 0.85);
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
+    }
+
+    .card-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 10px;
+    }
+
+    .card h4 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      line-height: 1.55;
+    }
+
+    .stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .stat-desc {
+      font-size: 0.86rem;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    /* Slide Footer */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #64748b;
+      position: relative;
+      z-index: 10;
+    }
+
+    .slide-footer a {
+      color: #818cf8;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== SLIDE 1: TITLE ==================== -->
+  <section class="pdf-slide">
+    <div class="top-accent-line"></div>
+    <div class="slide-header">
+      <div class="brand-mark">
+        <svg width="28" height="28" viewBox="0 0 64 64" fill="none">
+          <path d="M18 16H34C40.6274 16 46 21.3726 46 28C46 34.6274 40.6274 40 34 40H26V48H18V16Z" stroke="#6366f1" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M34 40L46 48" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="34" cy="28" r="4" fill="#a855f7"/>
+        </svg>
+        <span class="brand-name">R4 LABORATORIES</span>
+      </div>
+      <div class="tag-badge">NVIDIA INCEPTION PARTNERSHIP</div>
+    </div>
+
+    <div class="slide-body">
+      <div class="slide-title-box">
+        <div class="slide-category">FOUNDATIONAL AI COMPUTING · ALGEBRAIC TOPOLOGY</div>
+        <h1 class="slide-title" style="font-size: 3.4rem; max-width: 1000px;">
+          Beyond the Transformer:<br/>
+          The Native Geometric Foundation
+        </h1>
+        <p class="slide-subtitle" style="font-size: 1.35rem; max-width: 920px;">
+          Autoregressive geometric state models with exact addressed memory and multiplier-free serving kernels. Engineered from fundamental non-Euclidean manifolds for radical energy and thermal efficiency.
+        </p>
+      </div>
+
+      <div class="grid-3" style="max-width: 1100px;">
+        <div class="card highlight">
+          <div class="card-num">FOUNDER & RESEARCH LEAD</div>
+          <h4>Casey Allard</h4>
+          <p>casey.allard@r4labs.org<br/>2+ Years Self-Funded Engineering in Rust</p>
+        </div>
+        <div class="card">
+          <div class="card-num">LABORATORY BASE</div>
+          <h4>R4 Laboratories Inc.</h4>
+          <p>Providence, RI · Distributed Nodes<br/>Official Portal: https://r4labs.org</p>
+        </div>
+        <div class="card">
+          <div class="card-num">OPEN SOURCE CRATES</div>
+          <h4>Core Codebases</h4>
+          <p>Rust Engine: github.com/R4-Laboratories<br/>UOR Specifications & Topological Routers</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>R4 Laboratories · Confidential / Inception Review</span>
+      <span>r4labs.org</span>
+      <span>01 / 12</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 2: PROBLEM ==================== -->
+  <section class="pdf-slide">
+    <div class="top-accent-line"></div>
+    <div class="slide-header">
+      <div class="brand-mark">
+        <span class="brand-name">R4 LABORATORIES</span>
+      </div>
+      <div class="header-subtag">THE MACRO PROBLEM</div>
+    </div>
+
+    <div class="slide-body">
+      <div class="slide-title-box">
+        <div class="slide-category">THE COMPUTE & MEMORY CRISIS</div>
+        <h2 class="slide-title">The Scaling Ceiling of Dense Transformers</h2>
+        <p class="slide-subtitle">
+          Brute-force matrix scaling is colliding with the physical limits of memory bandwidth, power grids, and thermal dissipation.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-num">BOTTLENECK 01</div>
+          <h4 style="color: #ef4444;">Quadratic Memory Wall</h4>
+          <p>Standard attention scales as O(N²). Sprawling KV-caches starve memory bandwidth, rendering large-context real-time inference economically and physically prohibitive.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">BOTTLENECK 02</div>
+          <h4 style="color: #f59e0b;">Thermal & Energy Tax</h4>
+          <p>Datacenters are power-constrained by megawatt allocations; edge devices overheat. Continuous floating-point matrix multiplication dissipates immense energy for incremental gains.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">BOTTLENECK 03</div>
+          <h4 style="color: #8b5cf6;">Probabilistic Hallucination</h4>
+          <p>Unconstrained continuous vector approximations blur historical facts over long reasoning chains. Systems lack immutable, deterministic coordinate addressing for exact retrieval.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>R4 Laboratories · Confidential / Inception Review</span>
+      <span>r4labs.org</span>
+      <span>02 / 12</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 3: THESIS ==================== -->
+  <section class="pdf-slide">
+    <div class="top-accent-line"></div>
+    <div class="slide-header">
+      <div class="brand-mark">
+        <span class="brand-name">R4 LABORATORIES</span>
+      </div>
+      <div class="header-subtag">THE R4 THESIS</div>
+    </div>
+
+    <div class="slide-body">
+      <div class="slide-title-box">
+        <div class="slide-category">FIRST-PRINCIPLES COMPUTATION</div>
+        <h2 class="slide-title">Computing via Topology, Symmetry & Exact Invariants</h2>
+        <p class="slide-subtitle">
+          Intelligence does not require brute-force tensor multiplication. Nature and physics conserve energy through symmetry groups, topological invariants, and discrete transitions.
+        </p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" style="border-left: 4px solid #ef4444;">
+          <h4 style="color: #ef4444; margin-bottom: 16px;">Conventional Transformers (Status Quo)</h4>
+          <p style="margin-bottom: 12px;">• <strong>Dense Parameter Soup:</strong> Millions of unconstrained continuous weights requiring continuous optimization.</p>
+          <p style="margin-bottom: 12px;">• <strong>Continuous Floating-Point Multiplication:</strong> Tensor multipliers run at every step, creating thermal saturation.</p>
+          <p>• <strong>Runaway Cache Scaling:</strong> Memory bandwidth choked by sprawling KV-cache growth.</p>
+        </div>
+        <div class="card highlight" style="border-left: 4px solid #38bdf8;">
+          <h4 style="color: #38bdf8; margin-bottom: 16px;">The R4 Geometric Paradigm</h4>
+          <p style="margin-bottom: 12px;">• <strong>Structured Manifold Evolution:</strong> States transition over 4D hyperspheres (S³) and paired golden icosians (H4 &oplus; &phi;H4).</p>
+          <p style="margin-bottom: 12px;">• <strong>Multiplier-Free Serving:</strong> Served kernels execute strictly via integer add/sub, bitwise shifts, and table lookups.</p>
+          <p>• <strong>Exact Addressed Memory (UOR):</strong> Deterministic coordinate lookup eliminates hallucination and memory bloat.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>R4 Laboratories · Confidential / Inception Review</span>
+      <span>r4labs.org</span>
+      <span>03 / 12</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 4: ARCHITECTURE ==================== -->
+  <section class="pdf-slide">
+    <div class="top-accent-line"></div>
+    <div class="slide-header">
+      <div class="brand-mark">
+        <span class="brand-name">R4 LABORATORIES</span>
+      </div>
+      <div class="header-subtag">SYSTEM ARCHITECTURE</div>
+    </div>
+
+    <div class="slide-body">
+      <div class="slide-title-box">
+        <div class="slide-category">EXECUTION LIFECYCLE</div>
+        <h2 class="slide-title">The Four Fundamental Primitives</h2>
+        <p class="slide-subtitle">
+          From token ingestion to served response: a complete ground-up reimagination of model architecture.
+        </p>
+      </div>
+
+      <div class="grid-4">
+        <div class="card">
+          <div class="card-num">PRIMITIVE 01</div>
+          <h4>Prime Ingestion</h4>
+          <p>Tokens mapped to exact prime addresses and fixed zeta-zero phases, preserving structural and harmonic identity without continuous vector dilution.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">PRIMITIVE 02</div>
+          <h4>R4/S3 Manifold</h4>
+          <p>Autoregressive state transitions over 4D hyperspheres and paired icosian lattices, preserving chiral orientation and exact algebraic invariants.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">PRIMITIVE 03</div>
+          <h4>Exact Memory</h4>
+          <p>Universal Object Reference (UOR) addressing. Information is anchored as deterministic coordinates, ending lossy associative attention decay.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-num">PRIMITIVE 04</div>
+          <h4 style="color: #38bdf8;">Multiplier-Free</h4>
+          <p>Served inference executes strictly via bounded integer addition, bitwise shifts, and compact table lookups. Zero floating-point multiplier instructions.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>R4 Laboratories · Confidential / Inception Review</span>
+      <span>r4labs.org</span>
+      <span>04 / 12</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 5: PERFORMANCE ==================== -->
+  <section class="pdf-slide">
+    <div class="top-accent-line"></div>
+    <div class="slide-header">
+      <div class="brand-mark">
+        <span class="brand-name">R4 LABORATORIES</span>
+      </div>
+      <div class="header-subtag">PERFORMANCE CHARACTERISTICS</div>
+    </div>
+
+    <div class="slide-body">
+      <div class="slide-title-box">
+        <div class="slide-category">MEASURED ARCHITECTURAL ADVANTAGES</div>
+        <h2 class="slide-title">Radical Efficiency by Mathematical Design</h2>
+        <p class="slide-subtitle">
+          Eliminating continuous matrix multiplication unlocks unprecedented latency, memory, and power characteristics.
+        </p>
+      </div>
+
+      <div class="grid-4">
+        <div class="card highlight">
+          <div class="stat-val">0</div>
+          <div class="stat-label">Served Multipliers</div>
+          <div class="stat-desc">Zero floating-point or transcendental multiplier instructions in served execution kernels.</div>
+        </div>
+        <div class="card highlight">
+          <div class="stat-val">10×+</div>
+          <div class="stat-label">Energy Reduction</div>
+          <div class="stat-desc">Sub-watt-hour token generation on consumer and edge hardware with near-zero thermal envelope.</div>
+        </div>
+        <div class="card">
+          <div class="stat-val">O(1)</div>
+          <div class="stat-label">Constant Memory</div>
+          <div class="stat-desc">Bounded geometric state space replaces sprawling multi-gigabyte KV-cache memory footprints.</div>
+        </div>
+        <div class="card">
+          <div class="stat-val">100%</div>
+          <div class="stat-label">Deterministic</div>
+          <div class="stat-desc">Bitwise deterministic artifact generation, exact addressable facts, and zero probabilistic decay.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>R4 Laboratories · Confidential / Inception Review</span>
+      <span>r4labs.org</span>
+      <span>05 / 12</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 6: NVIDIA SYNERGY ==================== -->
+  <section class="pdf-slide">
+    <div class="top-accent-line"></div>
+    <div class="slide-header">
+      <div class="brand-mark">
+        <span class="brand-name">R4 LABORATORIES</span>
+      </div>
+      <div class="tag-badge">NVIDIA CO-DESIGN</div>
+    </div>
+
+    <div class="slide-body">
+      <div class="slide-title-box">
+        <div class="slide-category">ACCELERATING DISCRETE GEOMETRIC PRIMITIVES</div>
+        <h2 class="slide-title">Why NVIDIA? Hardware Synergy & Optimization</h2>
+        <p class="slide-subtitle">
+          Unlocking extreme throughput and density on NVIDIA Ada Lovelace, Hopper, and Blackwell architectures.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card highlight">
+          <div class="card-num">TENSOR CORES</div>
+          <h4>INT4 / INT8 Integer Pipelines</h4>
+          <p>R4 serving kernels use bounded &le;4-bit integer linear maps and table reads—mapping natively to high-density integer pipelines on NVIDIA Tensor Cores for massive throughput multiplication.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">MEMORY BUS</div>
+          <h4>Memory Bandwidth Liberation</h4>
+          <p>By eradicating sprawling KV-caches in favor of compact geometric addressed coordinates, R4 relieves High Bandwidth Memory (HBM) bottlenecks, supporting 10x more concurrent streams per GPU.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">CUDA ACCELERATION</div>
+          <h4>Custom CUDA Ring Kernels</h4>
+          <p>Opportunity to co-develop CUDA and TensorRT acceleration for golden ratio Z[&phi;] ring arithmetic, Hopf fibration projections, and prime coordinate routing directly on NVIDIA SMs.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>R4 Laboratories · Confidential / Inception Review</span>
+      <span>r4labs.org</span>
+      <span>06 / 12</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 7: TRACTION ==================== -->
+  <section class="pdf-slide">
+    <div class="top-accent-line"></div>
+    <div class="slide-header">
+      <div class="brand-mark">
+        <span class="brand-name">R4 LABORATORIES</span>
+      </div>
+      <div class="header-subtag">PROOF OF WORK</div>
+    </div>
+
+    <div class="slide-body">
+      <div class="slide-title-box">
+        <div class="slide-category">OPEN SOURCE & PRODUCTION CODEBASE</div>
+        <h2 class="slide-title">2+ Years of Self-Funded Engineering in Rust</h2>
+        <p class="slide-subtitle">
+          A robust, memory-safe codebase, mathematical formalizations, and active repositories under @R4-Laboratories.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-num">CORE ENGINE</div>
+          <h4>uor-r4</h4>
+          <p>The primary experimental autoregressive geometric state model, Rust autodiff training tools, and multiplier-free serving kernels with bitwise deterministic artifacts.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">MANIFOLD ROUTER</div>
+          <h4>prime-router</h4>
+          <p>Angular-manifold and prime-coordinate routing framework for high-dimensional semantic spaces and non-Euclidean state updates.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">ADDRESSING SPEC</div>
+          <h4>uor-addr-1 & Web Runtimes</h4>
+          <p>Canonical content addressing standard (RFC8785) for agent-produced content, alongside in-browser WebAssembly native inference engines (uor-r4-wasm-chat).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>R4 Laboratories · Confidential / Inception Review</span>
+      <span>r4labs.org</span>
+      <span>07 / 12</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 8: AUTONOMOUS LABS ==================== -->
+  <section class="pdf-slide">
+    <div class="top-accent-line"></div>
+    <div class="slide-header">
+      <div class="brand-mark">
+        <span class="brand-name">R4 LABORATORIES</span>
+      </div>
+      <div class="header-subtag">RESEARCH METHODOLOGY</div>
+    </div>
+
+    <div class="slide-body">
+      <div class="slide-title-box">
+        <div class="slide-category">CONTINUOUS SCIENTIFIC VERIFICATION</div>
+        <h2 class="slide-title">Autonomous Multi-Agent Research Ecosystem</h2>
+        <p class="slide-subtitle">
+          R4 Laboratories operates autonomous multi-agent research benches that enforce cryptographic receipts and eliminate reproducibility crises.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-num">AUDITABILITY</div>
+          <h4>Cryptographic Evidence</h4>
+          <p>Every hypothesis, training checkpoint, evaluation score, and parameter update is recorded in immutable, hash-linked receipt ledgers.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-num">REPRODUCIBILITY</div>
+          <h4>Zero Verification Debt</h4>
+          <p>Pinning exact compiler states, seeds, and training ladders guarantees bitwise identical results across diverse developer and cluster environments.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">CONTINUOUS DISCOVERY</div>
+          <h4>Autonomous Bench Operations</h4>
+          <p>Multi-agent benches coordinate across isolated worktrees, continuously exploring non-Euclidean topologies and hard/relaxed discretization bridges.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>R4 Laboratories · Confidential / Inception Review</span>
+      <span>r4labs.org</span>
+      <span>08 / 12</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 9: COMMERCIALIZATION ==================== -->
+  <section class="pdf-slide">
+    <div class="top-accent-line"></div>
+    <div class="slide-header">
+      <div class="brand-mark">
+        <span class="brand-name">R4 LABORATORIES</span>
+      </div>
+      <div class="header-subtag">COMMERCIAL OPPORTUNITY</div>
+    </div>
+
+    <div class="slide-body">
+      <div class="slide-title-box">
+        <div class="slide-category">MARKET VERTICALS & REVENUE PATH</div>
+        <h2 class="slide-title">Target Markets & Commercialization</h2>
+        <p class="slide-subtitle">
+          Targeting high-margin, mission-critical sectors where transformers are physically non-viable or economically prohibitive.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card highlight">
+          <div class="card-num">VERTICAL 01</div>
+          <h4>Edge AI, Defense & Aerospace</h4>
+          <p>Thermal-constrained and battery-powered platforms (drones, satellites, robotics, mobile) requiring local offline frontier reasoning without burning out batteries or overheating.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">VERTICAL 02</div>
+          <h4>Enterprise Exact Memory</h4>
+          <p>Financial audit, legal compliance, and healthcare systems requiring verifiable, non-hallucinatory retrieval of historical facts and regulatory documents with cryptographic proof.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">VERTICAL 03</div>
+          <h4>Foundation Model IP Licensing</h4>
+          <p>Licensing multiplier-free geometric model weights, topological routers, and ultra-lightweight serving runtimes to hyperscalers, chipmakers, and device manufacturers.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>R4 Laboratories · Confidential / Inception Review</span>
+      <span>r4labs.org</span>
+      <span>09 / 12</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 10: ROADMAP ==================== -->
+  <section class="pdf-slide">
+    <div class="top-accent-line"></div>
+    <div class="slide-header">
+      <div class="brand-mark">
+        <span class="brand-name">R4 LABORATORIES</span>
+      </div>
+      <div class="header-subtag">STRATEGIC MILESTONES</div>
+    </div>
+
+    <div class="slide-body">
+      <div class="slide-title-box">
+        <div class="slide-category">DEVELOPMENT TIMELINE</div>
+        <h2 class="slide-title">Roadmap: From Theory to Frontier Scaling</h2>
+        <p class="slide-subtitle">
+          A disciplined execution trajectory moving from Rust mathematical foundations to hardware-accelerated enterprise models.
+        </p>
+      </div>
+
+      <div class="grid-4">
+        <div class="card">
+          <div class="card-num">Q4 2026 (CURRENT)</div>
+          <h4>Training Ladder</h4>
+          <p>Finalize Rust autodiff joint-learning ladder, hard/relaxed discretization bridge, and public open-source benchmark suite.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-num">Q1 2027</div>
+          <h4>CUDA Acceleration</h4>
+          <p>Custom NVIDIA Tensor Core INT4/INT8 kernels; initial 1B-equivalent geometric model release with multiplier-free serving.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">Q2 2027</div>
+          <h4>Edge Deployment</h4>
+          <p>Ultra-low power edge deployment on embedded silicon and consumer hardware; enterprise pilot trials for exact addressed memory.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">Q3 2027</div>
+          <h4>Frontier Scaling</h4>
+          <p>Multi-node autonomous scaling and frontier capability evaluation across complex multi-step reasoning and mathematical benchmarks.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>R4 Laboratories · Confidential / Inception Review</span>
+      <span>r4labs.org</span>
+      <span>10 / 12</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 11: THE ASK ==================== -->
+  <section class="pdf-slide">
+    <div class="top-accent-line"></div>
+    <div class="slide-header">
+      <div class="brand-mark">
+        <span class="brand-name">R4 LABORATORIES</span>
+      </div>
+      <div class="tag-badge">INCEPTION PARTNERSHIP</div>
+    </div>
+
+    <div class="slide-body">
+      <div class="slide-title-box">
+        <div class="slide-category">PARTNERSHIP OBJECTIVES</div>
+        <h2 class="slide-title">The Ask: Accelerating R4 with NVIDIA Inception</h2>
+        <p class="slide-subtitle">
+          Partnering with NVIDIA to scale native geometric computing on accelerated enterprise hardware.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card highlight">
+          <div class="card-num">REQUEST 01</div>
+          <h4>GPU Cluster Compute</h4>
+          <p>Access to NVIDIA DGX Cloud or partner GPU resources (Lambda, CoreWeave, RunPod) to scale our offline Rust training ladder, parameter exploration, and empirical validation.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-num">REQUEST 02</div>
+          <h4>Architectural Collaboration</h4>
+          <p>Direct engagement with NVIDIA DevRel and engineers to optimize custom integer and table-lookup CUDA kernels for TensorRT and Blackwell integer pipelines.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">REQUEST 03</div>
+          <h4>Inception Go-to-Market</h4>
+          <p>Visibility through the NVIDIA Inception showcase, co-authored technical publications, and venture connections via Inception Capital Connect.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>R4 Laboratories · Confidential / Inception Review</span>
+      <span>r4labs.org</span>
+      <span>11 / 12</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 12: CLOSING ==================== -->
+  <section class="pdf-slide">
+    <div class="top-accent-line"></div>
+    <div class="slide-header">
+      <div class="brand-mark">
+        <span class="brand-name">R4 LABORATORIES</span>
+      </div>
+      <div class="tag-badge">JOIN THE FOUNDATION</div>
+    </div>
+
+    <div class="slide-body" style="text-align: center; align-items: center;">
+      <div class="slide-title-box" style="margin-bottom: 40px;">
+        <div class="slide-category">THE FUTURE OF COMPUTE</div>
+        <h2 class="slide-title" style="font-size: 3.5rem; margin-bottom: 24px;">
+          The Geometric Future of AI
+        </h2>
+        <p class="slide-subtitle" style="font-size: 1.45rem; max-width: 880px; margin: 0 auto; color: #cbd5e1; font-style: italic;">
+          "The future of intelligence will not be decided by who burns the most power, but by who discovers the most elegant geometry."
+        </p>
+      </div>
+
+      <div style="display: inline-flex; gap: 48px; background: rgba(14, 18, 30, 0.85); border: 1px solid rgba(99, 102, 241, 0.4); padding: 32px 54px; border-radius: 20px; text-align: left; box-shadow: 0 20px 50px rgba(0,0,0,0.6);">
+        <div>
+          <div style="font-size: 0.78rem; color: #38bdf8; font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 6px;">PRINCIPAL RESEARCHER & FOUNDER</div>
+          <div style="font-size: 1.35rem; font-weight: 800; color: #fff; margin-bottom: 4px;">Casey Allard</div>
+          <div style="font-size: 1rem; color: #94a3b8; font-family: 'JetBrains Mono', monospace;">casey.allard@r4labs.org</div>
+        </div>
+        <div style="border-left: 1px solid rgba(255, 255, 255, 0.12); padding-left: 48px;">
+          <div style="font-size: 0.78rem; color: #38bdf8; font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 6px;">LABORATORY HEADQUARTERS</div>
+          <div style="font-size: 1.35rem; font-weight: 800; color: #fff; margin-bottom: 4px;">Providence, RI · USA</div>
+          <div style="font-size: 1rem; color: #94a3b8; font-family: 'JetBrains Mono', monospace;">https://r4labs.org</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>R4 Laboratories · Confidential / Inception Review</span>
+      <span>github.com/R4-Laboratories</span>
+      <span>12 / 12</span>
+    </div>
+  </section>
+
+</body>
+</html>
